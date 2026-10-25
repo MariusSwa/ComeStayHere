@@ -12,8 +12,19 @@
     <h1>Host Dashboard</h1>
 
     <p class="text-muted">
-        Manage your ComeStayHere properties and hosting activities.
+        Manage ComeStayHere properties and hosting activities.
     </p>
+    <a asp-controller="Host"
+       asp-action="Bookings"
+       class="btn btn-primary mb-3">
+        View Booking Requests
+    </a>
+
+    <a asp-controller="Host"
+       asp-action="GuestDocuments"
+       class="btn btn-outline-primary mb-3">
+        Guest Documents
+    </a>
 
     <hr />
 
@@ -102,6 +113,12 @@
                                 }
 
                             </form>
+                            <a asp-controller="Host"
+                               asp-action="CheckInProcess"
+                               asp-route-id="@property.Id"
+                               class="btn btn-outline-primary mt-2">
+                                Configure Check-In
+                            </a>
 
                         </div>
                     </div>

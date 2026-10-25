@@ -1,0 +1,107 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model IEnumerable<ComeStayHere.Models.Booking>
+@using ComeStayHere.Models.Enums
+
+@{
+    ViewData["Title"] = "My Bookings";
+}
+
+<div class="container mt-4">
+
+    <h1>My Bookings</h1>
+
+    <p class="text-muted">
+        View your booking requests and their current status.
+    </p>
+
+    <hr />
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            You do not have any bookings yet.
+        </div>
+    }
+    else
+    {
+        @foreach (var booking in Model)
+        {
+            <div class="card mb-3">
+                <div class="card-body">
+
+                    <h4>
+                        @booking.Property?.Title
+                    </h4>
+
+                    <p>
+                        <strong>Check-in:</strong>
+                        @booking.CheckInDate.ToShortDateString()
+                    </p>
+
+                    <p>
+                        <strong>Check-out:</strong>
+                        @booking.CheckOutDate.ToShortDateString()
+                    </p>
+
+                    <p>
+                        <strong>Travelers:</strong>
+                        @booking.NumberOfTravelers
+                    </p>
+
+                    <p>
+                        <strong>Total:</strong>
+                        @booking.TotalPrice.ToString("C")
+                    </p>
+
+                    <p>
+                        <strong>Status:</strong>
+
+                        @if (booking.Status == BookingStatus.Pending)
+                        {
+                            <span class="badge bg-warning text-dark">
+                                Pending
+                            </span>
+                        }
+                        else if (booking.Status == BookingStatus.Approved)
+                        {
+                            <span class="badge bg-success">
+                                Approved
+                            </span>
+
+                            <div class="mt-3">
+                                <a asp-controller="Guest"
+                                   asp-action="CheckIn"
+                                   asp-route-id="@booking.Id"
+                                   class="btn btn-success">
+                                    Start Check-In
+                                </a>
+                            </div>
+                        }
+                        else if (booking.Status == BookingStatus.Rejected)
+                        {
+                            <span class="badge bg-danger">
+                                Rejected
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-primary">
+                                @booking.Status
+                            </span>
+                        }
+
+                    </p>
+
+                </div>
+            </div>
+        }
+    }
+
+    <a asp-action="Index"
+       class="btn btn-secondary">
+        Browse Properties
+    </a>
+
+</div>

@@ -1,0 +1,107 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model ComeStayHere.Models.HostProperty
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="container mt-4">
+
+    <a asp-action="Index"
+       class="btn btn-secondary mb-3">
+        Back to Properties
+    </a>
+
+    <h1>@Model.Title</h1>
+
+    <p>
+        @Model.City - @Model.PropertyType
+    </p>
+
+    @if (Model.PropertyImages.Any())
+    {
+        <div class="row mb-4">
+
+            @foreach (var image in Model.PropertyImages)
+            {
+                <div class="col-md-4 mb-3">
+                    <img src="@image.ImageUrl"
+                         class="img-fluid rounded"
+                         alt="@Model.Title" />
+                </div>
+            }
+
+        </div>
+    }
+
+    <h4>Property Details</h4>
+
+    <p>@Model.Description</p>
+
+    <p>
+        <strong>Address:</strong>
+        @Model.Address
+    </p>
+
+    <p>
+        <strong>Price per night:</strong>
+        @Model.PricePerNight.ToString("C")
+    </p>
+
+    <hr />
+
+    <h3>Book this Property</h3>
+
+    <form asp-controller="Guest"
+          asp-action="Book"
+          method="post">
+
+        <input type="hidden"
+               name="PropertyId"
+               value="@Model.Id" />
+
+        <div class="mb-3">
+            <label class="form-label">
+                Check-in Date
+            </label>
+
+            <input type="date"
+                   name="CheckInDate"
+                   class="form-control"
+                   required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">
+                Check-out Date
+            </label>
+
+            <input type="date"
+                   name="CheckOutDate"
+                   class="form-control"
+                   required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">
+                Number of Travelers
+            </label>
+
+            <input type="number"
+                   name="NumberOfTravelers"
+                   value="1"
+                   min="1"
+                   class="form-control"
+                   required />
+        </div>
+
+        <button type="submit"
+                class="btn btn-success">
+            Request Booking
+        </button>
+
+    </form>
+
+</div>

@@ -1,0 +1,82 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model IEnumerable<ComeStayHere.Models.GuestDocument>
+@using ComeStayHere.Models.Enums
+
+@{
+    ViewData["Title"] = "Guest Documents";
+}
+
+<div class="container mt-4">
+
+    <h1>Guest Check-In Documents</h1>
+
+    <p class="text-muted">
+        Review documents submitted by guests.
+    </p>
+
+    <hr />
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            There are currently no guest documents to review.
+        </div>
+    }
+    else
+    {
+        @foreach (var document in Model)
+        {
+            <div class="card mb-3">
+                <div class="card-body">
+
+                    <h4>
+                        @document.GuestCheckIn?.Booking?.Property?.Title
+                    </h4>
+
+                    <p>
+                        <strong>Document Type:</strong>
+                        @document.DocumentType
+                    </p>
+
+                    <p>
+                        <strong>Status:</strong>
+                        @document.Status
+                    </p>
+
+                    <a href="@document.FileUrl"
+                       target="_blank"
+                       class="btn btn-outline-primary">
+                        View Document
+                    </a>
+
+                    @if (document.Status == DocumentStatus.Pending)
+                    {
+                        <form asp-action="VerifyDocument"
+                              method="post"
+                              class="d-inline">
+
+                            <input type="hidden"
+                                   name="id"
+                                   value="@document.Id" />
+
+                            <button type="submit"
+                                    class="btn btn-success">
+                                Verify Document
+                            </button>
+
+                        </form>
+                    }
+
+                </div>
+            </div>
+        }
+    }
+
+    <a asp-action="Index"
+       class="btn btn-secondary">
+        Back to Dashboard
+    </a>
+
+</div>

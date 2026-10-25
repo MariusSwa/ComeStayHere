@@ -105,5 +105,23 @@ namespace ComeStayHere.Controllers
 
             return RedirectToAction(nameof(HostApplications));
         }
+
+        public async Task<IActionResult> Index()
+        {
+            var pendingApplications = await _context.HostApplications
+                .CountAsync(a => a.Status == ApplicationStatus.Pending);
+
+            var activeProperties = await _context.HostProperties
+                .CountAsync(p => p.IsActive);
+
+            var pendingBookings = await _context.Bookings
+                .CountAsync(b => b.Status == BookingStatus.Pending);
+
+            ViewBag.PendingApplications = pendingApplications;
+            ViewBag.ActiveProperties = activeProperties;
+            ViewBag.PendingBookings = pendingBookings;
+
+            return View();
+        }
     }
 }

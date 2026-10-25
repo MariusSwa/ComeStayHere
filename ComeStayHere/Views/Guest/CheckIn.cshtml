@@ -1,0 +1,123 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model ComeStayHere.Models.Booking
+
+@{
+    ViewData["Title"] = "Guest Check-In";
+}
+
+<div class="container mt-4">
+
+    <h1>Guest Check-In</h1>
+
+    <h4>@Model.Property?.Title</h4>
+
+    <p>
+        <strong>Check-in date:</strong>
+        @Model.CheckInDate.ToShortDateString()
+    </p>
+
+    <hr />
+
+    @if (Model.Property?.CheckInProcess != null)
+    {
+        <h4>
+            @Model.Property.CheckInProcess.Title
+        </h4>
+
+        <p>
+            @Model.Property.CheckInProcess.Description
+        </p>
+
+        @if (Model.Property.CheckInProcess.RequiresDocument)
+        {
+            <p>
+                <strong>Required Document:</strong>
+                @Model.Property.CheckInProcess.RequiredDocumentType
+            </p>
+        }
+    }
+    else
+    {
+        <div class="alert alert-info">
+            The Host has not configured specific check-in
+            instructions for this property.
+        </div>
+    }
+
+    <hr />
+
+    <h4>Upload Check-In Document</h4>
+
+    <form asp-action="UploadDocument"
+          method="post"
+          enctype="multipart/form-data">
+
+        <input type="hidden"
+               name="bookingId"
+               value="@Model.Id" />
+
+        <div class="mb-3">
+
+            <label class="form-label">
+                Document Type
+            </label>
+
+            <select name="documentType"
+                    class="form-select"
+                    required>
+
+                <option value="">Select document</option>
+                <option value="ID">ID</option>
+                <option value="Passport">Passport</option>
+
+            </select>
+
+        </div>
+
+        <div class="mb-3">
+
+            <label class="form-label">
+                Document
+            </label>
+
+            <input type="file"
+                   name="document"
+                   class="form-control"
+                   required />
+
+        </div>
+
+        <button type="submit"
+                class="btn btn-success">
+            Upload Document
+        </button>
+
+    </form>
+    @if (Model.GuestCheckIn != null &&
+     Model.GuestCheckIn.Documents.Any())
+    {
+        <hr />
+
+        <h4>Uploaded Documents</h4>
+
+        @foreach (var document in Model.GuestCheckIn.Documents)
+        {
+            <div class="card mb-2">
+                <div class="card-body">
+
+                    <strong>
+                        @document.DocumentType
+                    </strong>
+
+                    <span class="badge bg-secondary ms-2">
+                        @document.Status
+                    </span>
+
+                </div>
+            </div>
+        }
+    }
+
+</div>

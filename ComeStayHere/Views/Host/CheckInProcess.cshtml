@@ -1,0 +1,111 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model ComeStayHere.Models.HostProperty
+
+@{
+    ViewData["Title"] = "Check-In Process";
+}
+
+<div class="container mt-4">
+
+    <h1>Check-In Process</h1>
+
+    <h4>@Model.Title</h4>
+
+    <p class="text-muted">
+        Configure the check-in requirements for this property.
+    </p>
+
+    <hr />
+
+    <form asp-action="SaveCheckInProcess"
+          method="post">
+
+        <input type="hidden"
+               name="propertyId"
+               value="@Model.Id" />
+
+        <div class="mb-3">
+
+            <label class="form-label">
+                Check-In Title
+            </label>
+
+            <input type="text"
+                   name="title"
+                   value="@Model.CheckInProcess?.Title"
+                   class="form-control"
+                   required />
+
+        </div>
+
+        <div class="mb-3">
+
+            <label class="form-label">
+                Check-In Rules / Instructions
+            </label>
+
+            <textarea name="description"
+                      class="form-control"
+                      rows="5"
+                      required>@Model.CheckInProcess?.Description</textarea>
+
+        </div>
+
+        <div class="form-check mb-3">
+
+            <input type="checkbox"
+                   name="requiresDocument"
+                   value="true"
+                   class="form-check-input"
+                   checked="@Model.CheckInProcess?.RequiresDocument" />
+
+            <label class="form-check-label">
+                Require Guest Document
+            </label>
+
+        </div>
+
+        <div class="mb-3">
+
+            <label class="form-label">
+                Required Document Type
+            </label>
+
+            <select name="requiredDocumentType"
+                    class="form-select">
+
+                <option value="">
+                    Select Document
+                </option>
+
+                <option value="ID">
+                    ID
+                </option>
+
+                <option value="Passport">
+                    Passport
+                </option>
+
+                <option value="ID or Passport">
+                    ID or Passport
+                </option>
+
+            </select>
+
+        </div>
+
+        <button type="submit"
+                class="btn btn-primary">
+            Save Check-In Process
+        </button>
+
+        <a asp-action="Index"
+           class="btn btn-secondary">
+            Back
+        </a>
+
+    </form>
+
+</div>
