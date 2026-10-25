@@ -7,7 +7,7 @@ namespace ComeStayHere.Data
         public static async Task SeedRolesAndAdminAsync(IServiceProvider serviceProvider)
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
             string[] roles = { "Guest", "Host", "Admin", "SuperAdmin" };
 
@@ -26,7 +26,7 @@ namespace ComeStayHere.Data
 
             if (superAdmin == null)
             {
-                superAdmin = new IdentityUser
+                superAdmin = new ApplicationUser
                 {
                     UserName = superAdminEmail,
                     Email = superAdminEmail,
