@@ -1,0 +1,113 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model IEnumerable<ComeStayHere.Models.HostProperty>
+
+@{
+    ViewData["Title"] = "Host Dashboard";
+}
+
+<div class="container mt-4">
+
+    <h1>Host Dashboard</h1>
+
+    <p class="text-muted">
+        Manage your ComeStayHere properties and hosting activities.
+    </p>
+
+    <hr />
+
+    <h3>My Properties</h3>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            You currently have no properties.
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var property in Model)
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+
+                        @if (property.PropertyImages.Any())
+                        {
+                            <img src="@property.PropertyImages.First().ImageUrl"
+                                 class="card-img-top"
+                                 alt="@property.Title"
+                                 style="height: 250px; object-fit: cover;" />
+                        }
+
+                        <div class="card-body">
+
+                            <h4 class="card-title">
+                                @property.Title
+                            </h4>
+
+                            <p class="card-text">
+                                @property.Description
+                            </p>
+
+                            <p>
+                                <strong>Location:</strong>
+                                @property.City
+                            </p>
+
+                            <p>
+                                <strong>Price:</strong>
+                                @property.PricePerNight.ToString("C")
+                                per night
+                            </p>
+
+                            <p>
+                                <strong>Status:</strong>
+
+                                @if (property.IsActive)
+                                {
+                                    <span class="badge bg-success">
+                                        Active
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">
+                                        Inactive
+                                    </span>
+                                }
+                            </p>
+
+                            <form asp-action="TogglePropertyStatus"
+                                  method="post">
+
+                                <input type="hidden"
+                                       name="id"
+                                       value="@property.Id" />
+
+                                @if (property.IsActive)
+                                {
+                                    <button type="submit"
+                                            class="btn btn-warning">
+                                        Deactivate Property
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button type="submit"
+                                            class="btn btn-success">
+                                        Activate Property
+                                    </button>
+                                }
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+</div>
