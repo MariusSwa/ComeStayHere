@@ -1,0 +1,70 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model IEnumerable<ComeStayHere.Models.Notification>
+
+@{
+    ViewData["Title"] = "Notifications";
+}
+
+<div class="container mt-4">
+
+    <h1>Notifications</h1>
+
+    <p class="text-muted">
+        View your latest notifications.
+    </p>
+
+    <hr />
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            You do not have any notifications.
+        </div>
+    }
+    else
+    {
+        @foreach (var notification in Model)
+        {
+            <div class="card mb-3">
+
+                <div class="card-body">
+
+                    <p class="mb-1">
+                        @notification.Message
+                    </p>
+
+                    <small class="text-muted">
+                        @notification.CreatedAt
+                    </small>
+
+                    @if (!notification.IsRead)
+                    {
+                        <span class="badge bg-primary ms-2">
+                            New
+                        </span>
+
+                        <form asp-action="MarkAsRead"
+                              method="post"
+                              class="d-inline">
+
+                            <input type="hidden"
+                                   name="id"
+                                   value="@notification.Id" />
+
+                            <button type="submit"
+                                    class="btn btn-sm btn-outline-secondary ms-2">
+                                Mark as Read
+                            </button>
+
+                        </form>
+                    }
+
+                </div>
+
+            </div>
+        }
+    }
+
+</div>

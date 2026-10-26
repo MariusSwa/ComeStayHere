@@ -1,0 +1,62 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model ComeStayHere.Models.Message
+
+@{
+    ViewData["Title"] = "Message";
+}
+
+<div class="container mt-4">
+
+    <h1>Message</h1>
+
+    <hr />
+
+    <p>
+        <strong>From:</strong>
+        @Model.Sender?.Email
+    </p>
+
+    <p>
+        <strong>Sent:</strong>
+        @Model.SentAt
+    </p>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            @Model.Content
+        </div>
+    </div>
+
+    <h4>Reply</h4>
+
+    <form asp-action="Reply"
+          method="post">
+
+        <input type="hidden"
+               name="messageId"
+               value="@Model.Id" />
+
+        <div class="mb-3">
+
+            <textarea name="content"
+                      class="form-control"
+                      rows="4"
+                      required></textarea>
+
+        </div>
+
+        <button type="submit"
+                class="btn btn-primary">
+            Send Reply
+        </button>
+
+        <a asp-action="Index"
+           class="btn btn-secondary">
+            Back to Inbox
+        </a>
+
+    </form>
+
+</div>

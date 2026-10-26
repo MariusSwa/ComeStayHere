@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using ComeStayHere.Data;
+using ComeStayHere.Models;
+using ComeStayHere.Models.Enums;
 
 namespace ComeStayHere.Areas.Identity.Pages.Account;
 
@@ -22,12 +24,17 @@ public class LoginModel : PageModel
 {
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly ILogger<LoginModel> _logger;
+    private readonly ApplicationDbContext _context;
 
-    public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger)
-    {
-        _signInManager = signInManager;
-        _logger = logger;
-    }
+    public LoginModel(
+         SignInManager<ApplicationUser> signInManager,
+         ILogger<LoginModel> logger,
+         ApplicationDbContext context)
+        {
+            _signInManager = signInManager;
+            _logger = logger;
+            _context = context;
+        }
 
     /// <summary>
     ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -116,6 +123,24 @@ public class LoginModel : PageModel
             if (result.Succeeded)
             {
                 _logger.LogInformation("User logged in.");
+
+                var user = await _signInManager.UserManager
+                    .FindByEmailAsync(Input.Email);
+
+                if (user != null)
+                {
+                    var activityLog = new ActivityLog
+                    {
+                        UserId = user.Id,
+                        ActivityType = ActivityType.Login,
+                        Description = "User logged in.",
+                        Timestamp = DateTime.Now
+                    };
+
+                    _context.ActivityLogs.Add(activityLog);
+                    await _context.SaveChangesAsync();
+                }
+
                 return LocalRedirect(returnUrl);
             }
             if (result.RequiresTwoFactor)

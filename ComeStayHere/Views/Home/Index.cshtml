@@ -1,8 +1,121 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<ComeStayHere.Models.HostProperty>
+
+@{
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-4">
+
+    <div class="text-center py-5">
+
+        <div class="home-hero text-center">
+
+    <span class="hero-label">
+        COME • STAY • EXPLORE
+    </span>
+
+    <h1 class="display-3 fw-bold mt-3">
+        Find your next stay
+    </h1>
+
+    <p class="lead">
+        Discover unique properties and make your next trip
+        one to remember.
+    </p>
+
+        @if (User.Identity != null &&
+             User.Identity.IsAuthenticated &&
+             User.IsInRole("Guest"))
+        {
+            <a asp-controller="Guest"
+               asp-action="Index"
+               class="btn btn-primary btn-lg">
+                Explore Properties
+            </a>
+        }
+        else if (User.Identity == null ||
+                 !User.Identity.IsAuthenticated)
+        {
+            <a asp-area="Identity"
+               asp-page="/Account/Register"
+               class="btn btn-primary btn-lg">
+                Get Started
+            </a>
+        }
+
+    </div>
+
+    <hr />
+
+    <h2 class="mb-4">
+        Available Properties
+    </h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            There are currently no active properties available.
+        </div>
+    }
+    else
+    {
+        <div class="row">
+
+            @foreach (var property in Model)
+            {
+                <div class="col-md-4 mb-4">
+
+                    <div class="card h-100">
+
+                        @if (property.PropertyImages.Any())
+                        {
+                            <img src="@property.PropertyImages.First().ImageUrl"
+                                 class="card-img-top"
+                                 style="height: 220px; object-fit: cover;"
+                                 alt="@property.Title" />
+                        }
+
+                        <div class="card-body">
+
+                            <h5 class="card-title">
+                                @property.Title
+                            </h5>
+
+                            <p class="text-muted mb-1">
+                                @property.City
+                            </p>
+
+                            <p class="mb-2">
+                                @property.PropertyType
+                            </p>
+
+                            <p>
+                                <strong>
+                                    @property.PricePerNight.ToString("C")
+                                </strong>
+                                per night
+                            </p>
+
+                            @if (User.Identity != null &&
+                                 User.Identity.IsAuthenticated &&
+                                 User.IsInRole("Guest"))
+                            {
+                                <a asp-controller="Guest"
+                                   asp-action="Details"
+                                   asp-route-id="@property.Id"
+                                   class="btn btn-outline-primary">
+                                    View Property
+                                </a>
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    }
+
 </div>

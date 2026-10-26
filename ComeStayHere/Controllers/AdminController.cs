@@ -1,9 +1,10 @@
 ﻿using ComeStayHere.Data;
+using ComeStayHere.Models;
 using ComeStayHere.Models.Enums;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 
 namespace ComeStayHere.Controllers
 {
@@ -50,14 +51,13 @@ namespace ComeStayHere.Controllers
                 return RedirectToAction(nameof(HostApplications));
             }
 
-            var addRoleResult = await _userManager.AddToRoleAsync(
-                application.User,
-                "Host");
+            var addRoleResult = await _userManager.AddToRoleAsync(application.User, "Host");
 
             if (!addRoleResult.Succeeded)
             {
                 return RedirectToAction(nameof(HostApplications));
             }
+
 
             if (await _userManager.IsInRoleAsync(application.User, "Guest"))
             {
@@ -71,9 +71,21 @@ namespace ComeStayHere.Controllers
                 }
             }
 
+
+
             application.Status = ApplicationStatus.Approved;
             application.ReviewedAt = DateTime.Now;
             application.ReviewedBy = _userManager.GetUserId(User);
+
+            var activityLog = new ActivityLog
+            {
+                UserId = application.UserId,
+                ActivityType = ActivityType.RoleChange,
+                Description = "User role changed from Guest to Host.",
+                Timestamp = DateTime.Now
+            };
+
+            _context.ActivityLogs.Add(activityLog);
 
             await _context.SaveChangesAsync();
 
@@ -122,6 +134,16 @@ namespace ComeStayHere.Controllers
             ViewBag.PendingBookings = pendingBookings;
 
             return View();
+        }
+
+        public async Task<IActionResult> ActivityLogs()
+        {
+            var activityLogs = await _context.ActivityLogs
+                .Include(a => a.User)
+                .OrderByDescending(a => a.Timestamp)
+                .ToListAsync();
+
+            return View(activityLogs);
         }
     }
 }

@@ -113,6 +113,27 @@ namespace ComeStayHere.Controllers
 
             booking.Status = BookingStatus.Approved;
 
+            var activityLog = new ActivityLog
+            {
+                UserId = user.Id,
+                ActivityType = ActivityType.BookingStatusUpdate,
+                Description = $"Booking {booking.Id} was approved.",
+                Timestamp = DateTime.Now
+            };
+
+            _context.ActivityLogs.Add(activityLog);
+
+            var notification = new Notification
+            {
+                UserId = booking.GuestId,
+                Message = "Your booking has been approved.",
+                Type = NotificationType.BookingApproved,
+                CreatedAt = DateTime.Now,
+                IsRead = false
+            };
+
+            _context.Notifications.Add(notification);
+
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Bookings));
@@ -147,6 +168,16 @@ namespace ComeStayHere.Controllers
             }
 
             booking.Status = BookingStatus.Rejected;
+
+            var activityLog = new ActivityLog
+            {
+                UserId = user.Id,
+                ActivityType = ActivityType.BookingStatusUpdate,
+                Description = $"Booking {booking.Id} was rejected.",
+                Timestamp = DateTime.Now
+            };
+
+            _context.ActivityLogs.Add(activityLog);
 
             await _context.SaveChangesAsync();
 
@@ -286,9 +317,99 @@ namespace ComeStayHere.Controllers
 
             document.Status = DocumentStatus.Verified;
 
+            var guestCheckIn = document.GuestCheckIn;
+            var booking = guestCheckIn!.Booking;
+
+            guestCheckIn.Status = CheckInStatus.CheckedIn;
+            booking!.Status = BookingStatus.CheckedIn;
+
+            var activityLog = new ActivityLog
+            {
+                UserId = user.Id,
+                ActivityType = ActivityType.BookingStatusUpdate,
+                Description = $"Booking {booking.Id} was checked in.",
+                Timestamp = DateTime.Now
+            };
+
+            _context.ActivityLogs.Add(activityLog);
+
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(GuestDocuments));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditProperty(int id)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return Challenge();
+            }
+
+            var property = await _context.HostProperties
+                .FirstOrDefaultAsync(p =>
+                    p.Id == id &&
+                    p.HostId == user.Id);
+
+            if (property == null)
+            {
+                return NotFound();
+            }
+
+            return View(property);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditProperty(HostProperty model)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return Challenge();
+            }
+
+            var property = await _context.HostProperties
+                .FirstOrDefaultAsync(p =>
+                    p.Id == model.Id &&
+                    p.HostId == user.Id);
+
+            if (property == null)
+            {
+                return NotFound();
+            }
+
+            if (string.IsNullOrWhiteSpace(model.Title) ||
+                string.IsNullOrWhiteSpace(model.Description) ||
+                string.IsNullOrWhiteSpace(model.Address) ||
+                string.IsNullOrWhiteSpace(model.City) ||
+                string.IsNullOrWhiteSpace(model.PropertyType) ||
+                model.PricePerNight <= 0 ||
+                model.CleaningFee < 0 ||
+                model.ServiceFee < 0)
+            {
+                ModelState.AddModelError(
+                    string.Empty,
+                    "Please enter valid property details.");
+
+                return View(model);
+            }
+
+            property.Title = model.Title;
+            property.Description = model.Description;
+            property.PricePerNight = model.PricePerNight;
+            property.CleaningFee = model.CleaningFee;
+            property.ServiceFee = model.ServiceFee;
+            property.Address = model.Address;
+            property.City = model.City;
+            property.PropertyType = model.PropertyType;
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

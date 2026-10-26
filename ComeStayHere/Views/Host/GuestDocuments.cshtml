@@ -42,7 +42,18 @@
 
                     <p>
                         <strong>Status:</strong>
-                        @document.Status
+                        @if (document.Status == ComeStayHere.Models.Enums.DocumentStatus.Verified)
+{
+    <span class="badge status-verified">
+        Verified
+    </span>
+}
+else
+{
+    <span class="badge status-pending">
+        Pending
+    </span>
+}
                     </p>
 
                     <a href="@document.FileUrl"

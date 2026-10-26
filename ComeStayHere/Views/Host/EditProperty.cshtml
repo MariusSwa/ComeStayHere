@@ -1,0 +1,147 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model ComeStayHere.Models.HostProperty
+
+@{
+    ViewData["Title"] = "Edit Property";
+}
+
+<div class="container mt-4">
+
+    <h1>Edit Property</h1>
+
+    <p class="text-muted">
+        Update the details and fees for your property.
+    </p>
+
+    <hr />
+
+    <form asp-action="EditProperty"
+          method="post">
+
+        <input asp-for="Id"
+               type="hidden" />
+
+        <div asp-validation-summary="ModelOnly"
+             class="text-danger mb-3">
+        </div>
+
+        <div class="mb-3">
+
+            <label asp-for="Title"
+                   class="form-label">
+                Title
+            </label>
+
+            <input asp-for="Title"
+                   class="form-control" />
+
+        </div>
+
+        <div class="mb-3">
+
+            <label asp-for="Description"
+                   class="form-label">
+                Description
+            </label>
+
+            <textarea asp-for="Description"
+                      class="form-control"
+                      rows="4"></textarea>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-4 mb-3">
+
+                <label asp-for="PricePerNight"
+                       class="form-label">
+                    Price Per Night
+                </label>
+
+                <input asp-for="PricePerNight"
+                       class="form-control" />
+
+            </div>
+
+            <div class="col-md-4 mb-3">
+
+                <label asp-for="CleaningFee"
+                       class="form-label">
+                    Cleaning Fee
+                </label>
+
+                <input asp-for="CleaningFee"
+                       class="form-control" />
+
+            </div>
+
+            <div class="col-md-4 mb-3">
+
+                <label asp-for="ServiceFee"
+                       class="form-label">
+                    Service Fee
+                </label>
+
+                <input asp-for="ServiceFee"
+                       class="form-control" />
+
+            </div>
+
+        </div>
+
+        <div class="mb-3">
+
+            <label asp-for="Address"
+                   class="form-label">
+                Address
+            </label>
+
+            <input asp-for="Address"
+                   class="form-control" />
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+
+                <label asp-for="City"
+                       class="form-label">
+                    City
+                </label>
+
+                <input asp-for="City"
+                       class="form-control" />
+
+            </div>
+
+            <div class="col-md-6 mb-3">
+
+                <label asp-for="PropertyType"
+                       class="form-label">
+                    Property Type
+                </label>
+
+                <input asp-for="PropertyType"
+                       class="form-control" />
+
+            </div>
+
+        </div>
+
+        <button type="submit"
+                class="btn btn-primary">
+            Save Changes
+        </button>
+
+        <a asp-action="Index"
+           class="btn btn-secondary">
+            Cancel
+        </a>
+
+    </form>
+
+</div>

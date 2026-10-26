@@ -102,6 +102,13 @@
             Request Booking
         </button>
 
+        <a asp-controller="Message"
+           asp-action="Send"
+           asp-route-propertyId="@Model.Id"
+           class="btn btn-outline-primary mb-3">
+            Contact Host
+        </a>
+
     </form>
 
 </div>

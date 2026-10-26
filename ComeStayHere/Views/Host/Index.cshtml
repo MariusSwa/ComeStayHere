@@ -78,13 +78,13 @@
 
                                 @if (property.IsActive)
                                 {
-                                    <span class="badge bg-success">
+                                    <span class="badge status-active">
                                         Active
                                     </span>
                                 }
                                 else
                                 {
-                                    <span class="badge bg-secondary">
+                                    <span class="badge status-inactive">
                                         Inactive
                                     </span>
                                 }
@@ -113,6 +113,14 @@
                                 }
 
                             </form>
+
+                            <a asp-controller="Host"
+                               asp-action="EditProperty"
+                               asp-route-id="@property.Id"
+                               class="btn btn-outline-primary">
+                                Edit Property
+                            </a>
+
                             <a asp-controller="Host"
                                asp-action="CheckInProcess"
                                asp-route-id="@property.Id"

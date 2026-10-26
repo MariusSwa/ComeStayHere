@@ -1,0 +1,46 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model ComeStayHere.Models.HostProperty
+
+@{
+    ViewData["Title"] = "Contact Host";
+}
+
+<div class="container mt-4">
+
+    <h1>Contact Host</h1>
+
+    <p>
+        <strong>Property:</strong>
+        @Model.Title
+    </p>
+
+    <form asp-action="Send"
+          method="post">
+
+        <input type="hidden"
+               name="propertyId"
+               value="@Model.Id" />
+
+        <div class="mb-3">
+
+            <label class="form-label">
+                Message
+            </label>
+
+            <textarea name="content"
+                      class="form-control"
+                      rows="5"
+                      required></textarea>
+
+        </div>
+
+        <button type="submit"
+                class="btn btn-primary">
+            Send Message
+        </button>
+
+    </form>
+
+</div>

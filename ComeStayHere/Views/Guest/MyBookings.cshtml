@@ -88,7 +88,32 @@
                         else
                         {
                             <span class="badge bg-primary">
-                                @booking.Status
+                                @switch (booking.Status)
+{
+    case ComeStayHere.Models.Enums.BookingStatus.Pending:
+        <span class="badge status-pending">
+            Pending
+        </span>
+        break;
+
+    case ComeStayHere.Models.Enums.BookingStatus.Approved:
+        <span class="badge status-approved">
+            Approved
+        </span>
+        break;
+
+    case ComeStayHere.Models.Enums.BookingStatus.Rejected:
+        <span class="badge status-rejected">
+            Rejected
+        </span>
+        break;
+
+    case ComeStayHere.Models.Enums.BookingStatus.CheckedIn:
+        <span class="badge status-checkedin">
+            Checked In
+        </span>
+        break;
+}
                             </span>
                         }
 
